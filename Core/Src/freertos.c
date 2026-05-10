@@ -288,8 +288,7 @@ void Motor_control_Task(void *argument)
   for(;;)
   {
 
-    DJIMotor_send_current(CAN_2_5);  // Yaw GM6020
-    DJIMotor_send_current(CAN_2_6);  // Pitch GM6020
+    DJIMotor_send_current(CAN_6020_1_4_ID, DJI_CAN_2);
     if (Global.Chssis.input.reset != 1)
       HAL_IWDG_Refresh(&hiwdg1);
     // fdcanx_send_data(&hfdcan1,0x200,can_data,8);
