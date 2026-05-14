@@ -8,7 +8,7 @@
 #define PWM_PIN_3 3
 #define PWM_PIN_4 4
 
-void PWM_control_init(void);
-void set_servo_angle(uint8_t channel, float angle); //统一给180舵机
+void PWM_ControlInit(void);
+void Set_ServoAngle(uint8_t channel, float angle); //统一给180舵机
 
 #endif

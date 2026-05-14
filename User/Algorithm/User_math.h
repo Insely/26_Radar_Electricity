@@ -23,14 +23,15 @@
 #define RAD_TO_DEG (180.0f / PI) //弧度转化为角度
 
 //声明一些函数
-extern fp32 invSqrt(fp32 num); //快速开方
-extern void abs_limit(fp32 * num, fp32 Limit); //绝对限制
-extern fp32 sign(fp32 value); //判断符号
+extern fp32 Inv_Sqrt(fp32 num); //快速开方
+extern void Abs_Limit(fp32 * num, fp32 Limit); //绝对限制
+extern fp32 Sign(fp32 value); //判断符号
 extern fp32 fp32_deadline(fp32 Value, fp32 minValue, fp32 maxValue); //浮点死区
 extern int16_t int16_deadline(int16_t Value, int16_t minValue, int16_t maxValue); //int16死区
 extern fp32 fp32_constrain(fp32 Value, fp32 minValue, fp32 maxValue); //浮点限幅函数
 extern int16_t int16_constrain(int16_t Value, int16_t minValue, int16_t maxValue); //int16限幅函数
 extern fp32 loop_fp32_constrain(fp32 Input, fp32 minValue, fp32 maxValue); //浮点循环限幅函数
+extern float normalize_angle(float angle);
 
 //数据类型转换
 extern int float_to_uint(float x_float, float x_min, float x_max, int bits) ;

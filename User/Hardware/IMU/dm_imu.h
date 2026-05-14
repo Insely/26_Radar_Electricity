@@ -9,6 +9,53 @@
 
 #include "stm32h7xx_hal.h"
 
+//rs485协议
+typedef struct
+{
+    float accel[3];
+    float gyro[3];
+    float roll;
+    float pitch;
+    float yaw;
+    float quaternion[4];
+} dm_imu_t;
+
+extern dm_imu_t dm_imu_data;
+
+/* 强制 1 字节对齐，防止编译器自动填充导致结构体大小与协议不符 */
+#pragma pack(push, 1)
+
+// 19字节常规数据帧 (加速度 0x01、角速度 0x02、欧拉角 0x03)
+typedef struct
+{
+    uint8_t header;   // 0x55
+    uint8_t tag;
+    uint8_t slave_id;
+    uint8_t reg;      // 寄存器ID
+    float data[3];    // 3个float数据
+    uint16_t crc;
+    uint8_t tail;     // 0x0A
+} normal_packet_t;
+
+// 23字节扩展数据帧 (四元数 0x04)
+typedef struct
+{
+    uint8_t header;   // 0x55
+    uint8_t tag;
+    uint8_t slave_id;
+    uint8_t reg;      // 0x04
+    float data[4];    // 4个float数据
+    uint16_t crc;
+    uint8_t tail;     // 0x0A
+} normal_ext_packet_t;
+
+#pragma pack(pop)
+
+// 外部调用接口
+void DM_IMU_RS485_Decode(uint8_t* pData, uint16_t len);
+
+
+/* can协议
 
 #define ACCEL_CAN_MAX (58.8f)
 #define ACCEL_CAN_MIN	(-58.8f)
@@ -45,5 +92,6 @@ extern imu_t imu ;
 
 void IMU_UpdateData(uint8_t* pData);
 void IMU_RequestData(FDCAN_HandleTypeDef* hfdcan,uint16_t can_id,uint8_t reg);
+ */
 
 #endif

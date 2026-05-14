@@ -62,11 +62,8 @@ typedef PACKED_STRUCT()
 RC_ctrl_t;
 
 /*外部函数调用*/
-void DT7toRCdata();
-void RC_control();
-void Keyboard_mouse_control();
-void VT13toRCdata();
-void RC_DATA_ZERO();
+void Remote_Tasks(void);
+extern RC_ctrl_t RC_data;
 
 
 #endif // !__REMOTE_CONTROL__

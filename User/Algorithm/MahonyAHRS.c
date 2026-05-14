@@ -60,13 +60,13 @@ void MahonyAHRSupdate(float q[4], float gx, float gy, float gz, float ax, float 
 	if(!((ax == 0.0f) && (ay == 0.0f) && (az == 0.0f))) {
 
 		// Normalise accelerometer measurement
-		recipNorm = invSqrt(ax * ax + ay * ay + az * az);
+		recipNorm = Inv_Sqrt(ax * ax + ay * ay + az * az);
 		ax *= recipNorm;
 		ay *= recipNorm;
 		az *= recipNorm;     
 
 		// Normalise magnetometer measurement
-		recipNorm = invSqrt(mx * mx + my * my + mz * mz);
+		recipNorm = Inv_Sqrt(mx * mx + my * my + mz * mz);
 		mx *= recipNorm;
 		my *= recipNorm;
 		mz *= recipNorm;   
@@ -136,7 +136,7 @@ void MahonyAHRSupdate(float q[4], float gx, float gy, float gz, float ax, float 
 	q[3] += (qa * gz + qb * gy - qc * gx); 
 	
 	// Normalise quaternion
-	recipNorm = invSqrt(q[0] * q[0] + q[1] * q[1] + q[2] * q[2] + q[3] * q[3]);
+	recipNorm = Inv_Sqrt(q[0] * q[0] + q[1] * q[1] + q[2] * q[2] + q[3] * q[3]);
 	q[0] *= recipNorm;
 	q[1] *= recipNorm;
 	q[2] *= recipNorm;
@@ -156,7 +156,7 @@ void MahonyAHRSupdateIMU(float q[4], float gx, float gy, float gz, float ax, flo
 	if(!((ax == 0.0f) && (ay == 0.0f) && (az == 0.0f))) {
 
 		// Normalise accelerometer measurement
-		recipNorm = invSqrt(ax * ax + ay * ay + az * az);
+		recipNorm = Inv_Sqrt(ax * ax + ay * ay + az * az);
 		ax *= recipNorm;
 		ay *= recipNorm;
 		az *= recipNorm;        
@@ -205,7 +205,7 @@ void MahonyAHRSupdateIMU(float q[4], float gx, float gy, float gz, float ax, flo
 	q[3] += (qa * gz + qb * gy - qc * gx); 
 	
 	// Normalise quaternion
-	recipNorm = invSqrt(q[0] * q[0] + q[1] * q[1] + q[2] * q[2] + q[3] * q[3]);
+	recipNorm = Inv_Sqrt(q[0] * q[0] + q[1] * q[1] + q[2] * q[2] + q[3] * q[3]);
 	q[0] *= recipNorm;
 	q[1] *= recipNorm;
 	q[2] *= recipNorm;

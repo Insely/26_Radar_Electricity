@@ -165,7 +165,7 @@ void receive_motor_data(DM_motor_t *motor, uint8_t *data)
 // {
 // 	uint16_t rec_id;
 // 	uint8_t rx_data[8] = {0};
-// 	fdcanx_receive(&hfdcan1, &rec_id, rx_data);
+// 	Fdcanx_Receive(&hfdcan1, &rec_id, rx_data);
 // 	switch (rec_id)
 // 	{
 //  		case 0x00: dm_motor_fbdata(&motor[Motor1], rx_data); receive_motor_data(&motor[Motor1], rx_data); break;

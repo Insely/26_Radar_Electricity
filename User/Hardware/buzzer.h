@@ -8,8 +8,8 @@
 #define BUZZER_TIM  htim12  //240hz
 #define BUZZER_CHANNEL TIM_CHANNEL_2
 
-void Buzzer_init();
-void Buzzer_set_frequency(float fre);
-void Buzzer_on();
-void Buzzer_off();
+void Buzzer_Init();
+void Buzzer_SetFrequency(float fre);
+void Buzzer_On();
+void Buzzer_Off();
 #endif

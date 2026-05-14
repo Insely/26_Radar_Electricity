@@ -23,12 +23,7 @@ typedef PACKED_STRUCT()
     uint16_t cacheEnergy;      // 缓冲能量
     uint16_t cacheEnergylimit; // 缓冲能量剩余限制
 } Supercap_send_t;
-// typedef struct 
-// {
-//     uint8_t setPower;          // 设置底盘功率
-//     uint16_t cacheEnergy;      // 缓冲能量
-//     uint16_t cacheEnergylimit; // 缓冲能量剩余限制
-// } Supercap_send_t;
+
 
 typedef enum
 {
@@ -40,9 +35,9 @@ typedef enum
 extern Supercap_t cap;
 extern Supercap_send_t send_data_cap;
 
-void Supercup_decode_candata(FDCAN_HandleTypeDef *hfdcan, uint8_t *data, uint32_t receive_id);
-void Supercup_send_data(void);
-int Supercap_set_power(uint8_t set);
-float Supercap_get_remain_vol(void);
-float Supercap_get_predict_energy(void);
+void Supercup_DecodeCandata(FDCAN_HandleTypeDef *hfdcan, uint8_t *data, uint32_t receive_id);
+void Supercup_SendData(void);
+int Supercap_SetPower(uint8_t set);
+float Supercap_GetRemainVol(void);
+float Supercap_GetPredictEnergy(void);
 #endif // !__SUPERCUP_H__

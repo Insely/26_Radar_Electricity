@@ -2,7 +2,7 @@
  * @file UART_data_txrx.h
  * @author set
  \home
- * @brief ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý·ï¿½ï¿½Í½ï¿½ï¿½ï¿½
+ * @brief ´®¿ÚÊý¾Ý·¢ËÍ½ÓÊÜ
  * @version 0.1
  * @date 2022-11-20
  *
@@ -18,9 +18,10 @@
 #include "main.h"
 #include "usart.h"
 #include "struct_typedef.h"
+#include "Auto_control.h"
 
-#define UART_BUFFER_SIZE 256//ï¿½ï¿½ï¿½Ú»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡
-//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý½á¹¹ï¿½ï¿½
+#define UART_BUFFER_SIZE 256//´®¿Ú»º³åÇø´óÐ¡
+//´®¿ÚÊý¾Ý½á¹¹Ìå
 
 typedef PACKED_STRUCT()
 {
@@ -32,20 +33,20 @@ typedef PACKED_STRUCT()
   HAL_StatusTypeDef Uart_status;
 } transmit_data;
 
-#include "Auto_control.h"
-
 extern transmit_data UART7_data;
 extern transmit_data UART10_data;
 extern transmit_data UART1_data;
+extern transmit_data UART8_data;
+
+//Íâ²¿µ÷ÓÃ
+void Uart_Init(void);                                                                                                                         //³õÊ¼»¯
+void Uart_DMARxTxStart(transmit_data *data, UART_HandleTypeDef *huart, DMA_HandleTypeDef *hdma_usart_rx, DMA_HandleTypeDef *hdma_usart_tx); //³õÊ¼»¯                                                                                               //½ÓÊÜÖÐ¶Ï
+void UART_SendData(transmit_data uart, uint8_t data[], uint16_t size);                                                                       //·¢ËÍ
+
+//ÄÚ²¿µ÷ÓÃ
+void Uart_DMARxTxStart(transmit_data *data, UART_HandleTypeDef *huart, DMA_HandleTypeDef *hdma_usart_rx, DMA_HandleTypeDef *hdma_usart_tx); //³õÊ¼»¯
+
 extern VisionData_t vision_data;
 
-
-//ï¿½â²¿ï¿½ï¿½ï¿½ï¿½
-void uart_init(void);                                                                                                                         //ï¿½ï¿½Ê¼ï¿½ï¿½
-void UART_DMA_rxtx_start(transmit_data *data, UART_HandleTypeDef *huart, DMA_HandleTypeDef *hdma_usart_rx, DMA_HandleTypeDef *hdma_usart_tx); //ï¿½ï¿½Ê¼ï¿½ï¿½                                                                                               //ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½
-void UART_send_data(transmit_data uart, uint8_t data[], uint16_t size);                                                                       //ï¿½ï¿½ï¿½ï¿½
-
-//ï¿½Ú²ï¿½ï¿½ï¿½ï¿½ï¿½
-void UART_DMA_rxtx_start(transmit_data *data, UART_HandleTypeDef *huart, DMA_HandleTypeDef *hdma_usart_rx, DMA_HandleTypeDef *hdma_usart_tx); //ï¿½ï¿½Ê¼ï¿½ï¿½
 #endif
 // end of file

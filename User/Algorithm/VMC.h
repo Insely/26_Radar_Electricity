@@ -61,8 +61,8 @@ typedef struct
 } VMC_s;
 
 extern void VMC_Init(VMC_s *VMC, float L1, float L2, float L3, float L4, float L5);
-extern void VMC_updata(VMC_s *VMC, float Phi1, float Phi4, float Phi1_dot, float Phi4_dot, float Phi1_ddot, float Phi4_ddot);
-extern void VMC_cal(VMC_s *VMC);
+extern void VMC_Updata(VMC_s *VMC, float Phi1, float Phi4, float Phi1_dot, float Phi4_dot, float Phi1_ddot, float Phi4_ddot);
+extern void VMC_Cal(VMC_s *VMC);
 
 
 #endif // !__VMC_H__

@@ -15,11 +15,11 @@
 #include "stdint.h"
 
 // 获取系统时间
-uint32_t Get_sys_time_ms(void); // recommend
-uint32_t Get_sys_time_us(void);
+uint32_t Get_SysTime_ms(void); // recommend
+uint32_t Get_SysTime_us(void);
 
-float Get_sys_time_s(void);
+float Get_SysTime_s(void);
 
-void TIM_count_100KHz(void);
+void TIM_Count_100kHz(void);
 #endif
 // end of file

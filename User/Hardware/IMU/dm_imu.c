@@ -4,9 +4,86 @@
 
 #include "User_math.h"
 
+
+#include "dm_imu.h"
+#include <string.h>
+
+//rs485协议
+//dm_imu_t dm_imu_data;
+
+/**
+ * @brief 达妙 IMU RS485 协议解析
+ * @param pData 串口接收缓冲区指针
+ * @param len   本次接收到的数据长度
+ */
+void DM_IMU_RS485_Decode(uint8_t* pData, uint16_t len)
+{
+    uint16_t i = 0;
+    
+    // 遍历整个接收缓冲区
+    while (i < len)
+    {
+        // 寻找帧头 0x55
+        if (pData[i] == 0x55)
+        {
+            uint8_t reg = pData[i + 3]; // 偏移3个字节是寄存器类型
+
+            // 1. 处理 19 字节的常规帧 (加速度、角速度、欧拉角)
+            if ((reg == 0x01 || reg == 0x02 || reg == 0x03) && (i + 19 <= len))
+            {
+                normal_packet_t packet;
+                // 内存拷贝，直接映射到结构体
+                memcpy(&packet, &pData[i], 19);
+                
+                // 校验帧尾
+                if (packet.tail == 0x0A)
+                {
+                    if (packet.reg == 0x01) {
+                        dm_imu_data.accel[0] = packet.data[0];
+                        dm_imu_data.accel[1] = packet.data[1];
+                        dm_imu_data.accel[2] = packet.data[2];
+                    } else if (packet.reg == 0x02) {
+                        dm_imu_data.gyro[0] = packet.data[0];
+                        dm_imu_data.gyro[1] = packet.data[1];
+                        dm_imu_data.gyro[2] = packet.data[2];
+                    } else if (packet.reg == 0x03) {
+                        dm_imu_data.roll  = packet.data[0];
+                        dm_imu_data.pitch = packet.data[1];
+                        dm_imu_data.yaw   = packet.data[2];
+                    }
+                    i += 19; // 解析成功，跳过这 19 个字节
+                    continue;
+                }
+            }
+            // 2. 处理 23 字节的扩展帧 (四元数)
+            else if (reg == 0x04 && (i + 23 <= len))
+            {
+                normal_ext_packet_t ext_packet;
+                memcpy(&ext_packet, &pData[i], 23);
+                
+                // 校验帧尾
+                if (ext_packet.tail == 0x0A)
+                {
+                    dm_imu_data.quaternion[0] = ext_packet.data[0];
+                    dm_imu_data.quaternion[1] = ext_packet.data[1];
+                    dm_imu_data.quaternion[2] = ext_packet.data[2];
+                    dm_imu_data.quaternion[3] = ext_packet.data[3];
+                    i += 23; // 解析成功，跳过这 23 个字节
+                    continue;
+                }
+            }
+        }
+        
+        // 如果当前字节不是 0x55，或者帧尾校验不通过，指针步进 1 字节继续找
+        i++;
+    }
+}
+
+
+
+
+/* can协议
 imu_t imu;
-
-
 void IMU_RequestData(FDCAN_HandleTypeDef* hfdcan,uint16_t can_id,uint8_t reg)
 {
 	FDCAN_TxHeaderTypeDef tx_header;
@@ -101,4 +178,4 @@ void IMU_UpdateData(uint8_t* pData)
 			IMU_UpdateQuaternion(pData);
 			break;
 	}
-}
+} */

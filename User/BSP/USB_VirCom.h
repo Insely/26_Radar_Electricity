@@ -13,7 +13,7 @@
 
 #include "stdint.h"
 #include "stdbool.h"
-void VirCom_send(uint8_t data[],uint16_t len);
-void VirCom_rev(uint8_t data[],uint16_t len);
+void Vircom_Send(uint8_t data[],uint16_t len);
+void Vircom_Rev(uint8_t data[],uint16_t len);
 #endif
 //end of file

@@ -10,10 +10,10 @@ typedef struct
     {
         enum chassis_mode_e
         {
-            FLOW,   // 底盘跟随
-            SPIN_P, // 正小陀螺
-            SPIN_N, // 逆小陀螺
-            SIDEWAYS,//应该是吊射底盘锁定
+            FLOW,      // 底盘跟随
+            SPIN_P,    // 正小陀螺
+            SPIN_N,    // 逆小陀螺
+            NO_FOLLOW, // 底盘不跟随
         } mode;
         struct
         {
@@ -22,14 +22,14 @@ typedef struct
             float r; // 转速 顺时针正，逆时针负
             uint8_t reset;
         } input;
-    } Chssis;
+    } Chassis;
     /*云台状态*/
     struct
     {
         enum gimbal_mode_e
         {
             NORMAL, // 普通模式
-            SHOOT,  // 射击模式
+            SHOOT,
             AUTO,   // 自瞄模式
         } mode;
         struct
@@ -78,6 +78,9 @@ typedef struct
             MID,
             LOW,
             SINGLE,
+            AUTO_1HZ,
+            AUTO_3HZ,
+            AUTO_5HZ,
             DEBUG_TRIGGER, // 退弹使用，低射速高射频。
         } tigger_mode;
          struct
@@ -98,7 +101,7 @@ typedef struct
         {
             STOP,
             FIRE,
-        } fire_status;//发射Hanging_Shot,//吊射模式
+        } fire_status;// 发射Hanging_Shot,// 吊射模式
         enum Hanging_Shot_e
         {
             Hanging_Shot_CLOSE,
@@ -112,7 +115,7 @@ typedef struct
         
         enum ONtigger_e
         {
-            tigger_close,//拨弹盘泄力
+            tigger_close,// 拨弹盘泄力
             tigger_open,
         } ONtigger;
         struct
@@ -151,9 +154,10 @@ typedef struct
     {
         enum cap_mode_e
         {
-            Not_FULL, // 暂时不知道放啥
+            Not_FULL, 
             FULL,
         } mode;
+        float speed;
     } Cap;
     /*控制模式*/
     struct

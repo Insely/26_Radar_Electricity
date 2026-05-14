@@ -1,5 +1,5 @@
 /**
- * @file IMU_updata.h
+ * @file IMU_Updata.h
  * @author sethome
  * @brief
  * @version 0.1
@@ -11,9 +11,11 @@
 #include "struct_typedef.h"
 #include "Kalman_Filter_c.h"
 #include "hipnuc_dec.h"
+#include "dm_imu.h"
 
+#ifndef __IMU_UPDATA__
 #define __IMU_UPDATA__
-#ifdef __IMU_UPDATA__
+
 
 struct IMU_t
 {
@@ -54,21 +56,22 @@ struct IMU_t
 extern struct IMU_t IMU_data;
 extern struct IMU_t IMU_data_history[10]; // IMU历史数据结构体
 extern hipnuc_raw_t IMU_HI_GIMBAL_data;
+extern dm_imu_t dm_imu_data;
 extern unsigned  long ulTdleCycleCount;	
 
 
 // 外部调用
-void IMU_init(void);   // IMU初始化
-void IMU_updata(void); // IMU数据更新
+void IMU_Init(void);   // IMU初始化
+void IMU_Updata(void); // IMU数据更新
 void MagUpdate(void);  // 磁力计数据更新
 void MagZero(void); // 清零地磁计
-void Get_angle(fp32 q[4], fp32 *yaw, fp32 *pitch, fp32 *roll);//非调用Lib版本
-void process_IMU_data();
+void Get_Angle(fp32 q[4], fp32 *yaw, fp32 *pitch, fp32 *roll);//非调用Lib版本
+void Process_IMUData();
 float get_history_data(uint8_t yaw_or_pitch,uint32_t history_time);
 float get_history_q_data(uint8_t i,uint32_t history_time);//获取历史数据函数
 float rad2degree(float a);
 float degree2rad(float a);
-void imu_cail_program(void);
-void IMU_offest(void);
+void IMU_CailProgram(void);
+void IMU_Offest(void);
 #endif
 // end of flie

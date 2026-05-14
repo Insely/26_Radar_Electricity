@@ -43,9 +43,8 @@ COMMON_SOURCES = \
 	$(wildcard User/Hardware/Motor/*.c) \
 	$(wildcard User/Hardware/Remote/*.c) \
     $(wildcard User/Software/*.c) \
-	$(wildcard User/Software/Chassis/*.c) \
-	$(wildcard User/Software/Gimbal/*.c) \
-	$(wildcard User/Software/Shoot/*.c) 
+	$(wildcard User/ui/*.c) \
+	$(wildcard User/System/*.c)
 
 ######################################
 # C sources
@@ -182,10 +181,8 @@ COMMON_INCLUDES = \
 -IUser/Hardware/Motor \
 -IUser/Hardware/Remote \
 -IUser/Software \
--IUser/Software/Chassis \
--IUser/Software/Gimbal \
--IUser/Software/Shoot \
--IUser/Typedefine
+-IUser/ui \
+-IUser/System
 # AS includes
 AS_INCLUDES =  \
 -ICore/Inc \
@@ -251,7 +248,8 @@ LDSCRIPT = stm32h723vgtx_flash.ld
 LIBS = -lc -lm -lnosys 
 LIBDIR = User/Algorithm/AHRS.lib
 LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
-
+# printf float
+LDFLAGS += -lc -lrdimon -u _printf_float
 # default action: build all
 all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin
 

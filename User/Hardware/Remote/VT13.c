@@ -1,3 +1,9 @@
+/*
+ * @Date: 2025-08-31 21:36:57
+ * @LastEditors: hao && (hao@qlu.edu.cn)
+ * @LastEditTime: 2025-10-30 20:47:26
+ * @FilePath: \Season-26-Code\User\Hardware\Remote\VT13.c
+ */
 #include "VT13.h"
 
 VT13_data_t VT13_data;
@@ -8,7 +14,7 @@ VT13_data_t VT13_data;
  * @param[out]     rc_ctrl: Ò£¿ØÆ÷Êý¾ÝÖ¸
  * @retval         none
  */
-void VT13_data_solve(volatile const uint8_t *VT13_buf, VT13_data_t *rc_ctrl)
+void VT13_DataSolve(volatile const uint8_t *VT13_buf, VT13_data_t *rc_ctrl)
 {
     if (VT13_buf == NULL || rc_ctrl == NULL)
     {

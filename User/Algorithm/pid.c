@@ -1,7 +1,7 @@
 #include "math.h"
 #include "pid.h"
 
-void pid_set(pid_t *PidSet,float p_set,float i_set,float d_set,float lim_out_set,float lim_i_outset)//PIDÉèÖÃ
+void PID_Set(pid_t *PidSet,float p_set,float i_set,float d_set,float lim_out_set,float lim_i_outset)//PIDÉèÖÃ
 {
   PidSet->p = p_set;   PidSet->i = i_set;   PidSet->d = d_set;
 //	PidSet->p_out = 0.0f;
@@ -13,7 +13,7 @@ void pid_set(pid_t *PidSet,float p_set,float i_set,float d_set,float lim_out_set
 }
 
 //PID¼ÆËã
-float pid_cal(pid_t *PidGoal,float Now,float Set)//PID??
+float PID_Cal(pid_t *PidGoal,float Now,float Set)//PID??
 {
 	PidGoal->set = Set;
   PidGoal->err_last = PidGoal->err;

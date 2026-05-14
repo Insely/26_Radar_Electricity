@@ -1,3 +1,9 @@
+/*
+ * @Date: 2025-08-31 21:36:57
+ * @LastEditors: hao && (hao@qlu.edu.cn)
+ * @LastEditTime: 2025-10-30 20:15:19
+ * @FilePath: \Season-26-Code\User\BSP\Stm32_time.c
+ */
 /**
  * @file time.c
  * @author sethome
@@ -11,22 +17,22 @@
 #include "Stm32_time.h"
 #include "stm32h7xx_hal.h"
 
-uint32_t Get_sys_time_ms(void)
+uint32_t Get_SysTime_ms(void)
 {
 	return HAL_GetTick();
 }
 
-float Get_sys_time_s(void)
+float Get_SysTime_s(void)
 {
 	return HAL_GetTick() / 1000.0f;
 }
 
 uint32_t cnt = 0;
-void TIM_count_100KHz(void)
+void TIM_Count_100kHz(void)
 {
 	cnt+=10;
 }
-uint32_t Get_sys_time_us(void)
+uint32_t Get_SysTime_us(void)
 {
 	return cnt;
 }

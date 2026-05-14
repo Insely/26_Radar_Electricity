@@ -30,7 +30,7 @@ float uint_to_float_LZ(uint16_t x, float x_min, float x_max, uint8_t bits) {
 //  */
 // void lz_send_command(uint8_t can_bus, uint8_t motor_id, uint8_t cmd_type, uint8_t *data) {
 //     FDCAN_HandleTypeDef *hfdcan = get_can_handle(can_bus);
-//     fdcanx_send_data(hfdcan, motor_id, data, 8);
+//     Fdcanx_SendData(hfdcan, motor_id, data, 8);
 // }
 
 /**

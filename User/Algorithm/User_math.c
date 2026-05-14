@@ -1,7 +1,7 @@
 #include "User_math.h"
 
 //快速开方
-fp32 invSqrt(fp32 num)
+fp32 Inv_Sqrt(fp32 num)
 {
     fp32 halfnum = 0.5f * num;
     fp32 y = num;
@@ -13,7 +13,7 @@ fp32 invSqrt(fp32 num)
 }
 
 //绝对限制
-void abs_limit(fp32 * num, fp32 Limit)
+void Abs_Limit(fp32 * num, fp32 Limit)
 {
     if (*num > Limit) {
         *num = Limit;
@@ -23,7 +23,7 @@ void abs_limit(fp32 * num, fp32 Limit)
 }
 
 //判断符号位
-fp32 sign(fp32 value)
+fp32 Sign(fp32 value)
 {
     if (value >= 0.0f) {
         return 1.0f;
@@ -91,6 +91,17 @@ fp32 loop_fp32_constrain(fp32 Input, fp32 minValue, fp32 maxValue)
         }
     }
     return Input;
+}
+
+// 将任意角度归一化到 [-PI, PI]
+float normalize_angle(float angle) {
+    const float TWO_PI = 2.0 * PI;
+    angle = fmod(angle, TWO_PI);      // 约简到 [-2π, 2π)
+    if (angle > PI)
+        angle -= TWO_PI;
+    else if (angle < -PI)
+        angle += TWO_PI;
+    return angle;
 }
 
 /**

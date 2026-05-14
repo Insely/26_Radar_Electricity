@@ -23,7 +23,7 @@ FDCAN_HandleTypeDef *Supercup_send_hfdcan; // 通过此处自动确定超电挂载的can通道
  * @param hfdcan 收到超电信息的can通道
  * @param data 收到的数据
  */
-void Supercup_decode_candata(FDCAN_HandleTypeDef *hfdcan, uint8_t *data, uint32_t receive_id)
+void Supercup_DecodeCandata(FDCAN_HandleTypeDef *hfdcan, uint8_t *data, uint32_t receive_id)
 {
     // 确定超电所挂载的can通道
     Supercup_send_hfdcan = hfdcan;
@@ -47,7 +47,7 @@ void Supercup_decode_candata(FDCAN_HandleTypeDef *hfdcan, uint8_t *data, uint32_
  * @brief 发送超电控制数据
  *
  */
-void Supercup_send_data(void)
+void Supercup_SendData(void)
 {
     static uint8_t can_send_data[8];
     static FDCAN_TxHeaderTypeDef tx_message;
@@ -79,7 +79,7 @@ void Supercup_send_data(void)
  * @param set 设置值 50~200
  * @return int 是否设置成功 0成功，-1失败
  */
-int Supercap_set_power(uint8_t set)
+int Supercap_SetPower(uint8_t set)
 {
     // if (set > 200 || set < 50)
     //	return -1;
@@ -92,7 +92,7 @@ int Supercap_set_power(uint8_t set)
  *
  * @return float 超电剩余电压
  */
-float Supercap_get_remain_vol(void)
+float Supercap_GetRemainVol(void)
 {
     return cap.remain_vol;
 }
@@ -102,7 +102,7 @@ float Supercap_get_remain_vol(void)
  *
  * @return float 超电剩余容量 百分值
  */
-float Supercap_get_predict_energy(void)
+float Supercap_GetPredictEnergy(void)
 {
     return cap.prediect_energy;
 }

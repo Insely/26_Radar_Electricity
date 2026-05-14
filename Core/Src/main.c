@@ -45,7 +45,7 @@
 
 
 #include "music.h"
-#include "Chassis.h"
+#include "Chassis_helm.h"
 #include "Gimbal.h"
 #include "shoot.h"
 #include "Auto_control.h"
@@ -140,18 +140,15 @@ int main(void)
   MX_TIM12_Init();
   MX_TIM1_Init();
   MX_TIM2_Init();
+  MX_UART8_Init();
   /* USER CODE BEGIN 2 */
  HAL_IWDG_Refresh(&hiwdg1);
  /*INIT*/
-  uart_init();
-  can_init();
+  Uart_Init();
+  Can_Init();
   Refree_system_init();
 
-  IMU_init();
-  Music_init();
-  Chassis_init();
-  Gimbal_init();
-  Shoot_init();
+  IMU_Init();
   HAL_IWDG_Refresh(&hiwdg1);
   HAL_GPIO_WritePin(Power_5V_GPIO_Port, Power_5V_Pin, GPIO_PIN_SET);
   HAL_GPIO_WritePin(Camera_ctrl_GPIO_Port, Camera_ctrl_Pin, GPIO_PIN_SET);
@@ -325,35 +322,36 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   uint8_t history = 4;
   if (htim->Instance == TIM13) // 1000HZ
   {
-    tick_ms++;
-    if(tick_ms%4==0)
-			{
-				IMU_RequestData(&hfdcan3,0x01,4);
-			}
-			else if(tick_ms%3==0)
-			{
-				IMU_RequestData(&hfdcan3,0x01,3);
-			}
-			else if(tick_ms%2==0)
-			{
-				IMU_RequestData(&hfdcan3,0x01,2);
-			}
-      else if(tick_ms%1==0)
-			{
-				IMU_RequestData(&hfdcan3,0x01,1);
-			}
+    IMU_Updata();
+    // tick_ms++;
+    // if(tick_ms%4==0)
+		// 	{
+		// 		IMU_RequestData(&hfdcan3,0x01,4);
+		// 	}
+		// 	else if(tick_ms%3==0)
+		// 	{
+		// 		IMU_RequestData(&hfdcan3,0x01,3);
+		// 	}
+		// 	else if(tick_ms%2==0)
+		// 	{
+		// 		IMU_RequestData(&hfdcan3,0x01,2);
+		// 	}
+    //   else if(tick_ms%1==0)
+		// 	{
+		// 		IMU_RequestData(&hfdcan3,0x01,1);
+		// 	}
 			
-			if(tick_ms>1000)
-				tick_ms=0;
+		// 	if(tick_ms>1000)
+		// 		tick_ms=0;
   }
   else if (htim->Instance == TIM14) // 200Hz
   {
     if (i == 0)
     {
      // HAL_GPIO_WritePin(Camera_ctrl_GPIO_Port, Camera_ctrl_Pin, GPIO_PIN_SET);
-      STM32_to_MINIPC(IMU_data_history[history].AHRS.yaw,
-                      IMU_data_history[history].AHRS.pitch,
-                      cos(IMU_data_history[history].AHRS.pitch) * IMU_data_history[history].gyro[2] - sin(IMU_data_history[history].AHRS.yaw) * IMU_data_history[history].gyro[1]);
+      STM32_to_MINIPC(dm_imu_data.yaw * DEG_TO_RAD,
+                      -dm_imu_data.pitch * DEG_TO_RAD,
+                      (cos(dm_imu_data.pitch * DEG_TO_RAD) * dm_imu_data.gyro[2] - sin(dm_imu_data.pitch * DEG_TO_RAD) * dm_imu_data.gyro[0]) * DEG_TO_RAD);
       i = 1;
     }
     else

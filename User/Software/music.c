@@ -1,14 +1,3 @@
-/**
- * @file music.c
- * @author Siri (lixirui2017@outlook.com)
- * @brief 音乐播放模块
- * @version 0.1
- * @date 2025-04-07
- *
- * @copyright Copyright (c) 2025
- *
- */
-
 #include "music.h"
 
 // ===== 《两只老虎》旋律数组 =====
@@ -53,12 +42,12 @@ Note melody[] = {
     {MUSIC_FINISH,500},
 };
 
-void Music_init()
+void Music_Init()
 {
-    Buzzer_init();
+    Buzzer_Init();
 }
 
-void Music_play(Note *note)
+void Music_Play(Note *note)
 {
     for (int i = 0; note[i].fre!=MUSIC_FINISH; i++)
     {

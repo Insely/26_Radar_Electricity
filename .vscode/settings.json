@@ -59,6 +59,7 @@
   "cmake.configureOnOpen": false,
   "C_Cpp.errorSquiggles": "enabled",
   "files.associations": {
+    "*.json": "json",
     "Makefile": "makefile",
     "gimbal.h": "c",
     "control_setting.h": "c",
@@ -81,7 +82,7 @@
     "uart_data_txrx.h": "c",
     "usart.h": "c",
     "global_status.h": "c",
-    "chassis.h": "c",
+    "chassis_helm.h": "c",
     "remote_control.h": "c",
     "dt7.h": "c",
     "cmsis_os.h": "c",
@@ -122,7 +123,9 @@
     "compare": "c",
     "type_traits": "c",
     "dm_imu.h": "c",
-    "robot_param_omni_infantry.h": "c"
+    "robot_param_omni_infantry.h": "c",
+    "robot_typedef.h": "c",
+    "clist.h": "c"
   },
   "files.encoding": "gbk",
   "makefile.makefilePath": "D:\\RM\\code\\25-EE-code\\Makefile",

@@ -2,7 +2,7 @@
 
 DT7_data_s DT7_data;
 
-void DT7_decode_data(uint8_t *sbus_buf)
+void DT7_DecodeData(uint8_t *sbus_buf)
 {
     DT7_data.rc.ch[0] = (sbus_buf[0] | (sbus_buf[1] << 8)) & 0x07ff;        //!< Channel 0
     DT7_data.rc.ch[1] = ((sbus_buf[1] >> 3) | (sbus_buf[2] << 5)) & 0x07ff; //!< Channel 1

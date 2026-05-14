@@ -4,7 +4,7 @@
 #include "main.h"
 #include "referee_system_protocol.h"
 #include "fifo.h"
-// 基于串口协议附录V1.5
+// 基于通信协议V1.1.0
 
 typedef struct // 自定义结构体，需在函数中赋值，然后在 FREERTOS 里调用  后续可根据需要自行添加
 {
@@ -12,17 +12,22 @@ typedef struct // 自定义结构体，需在函数中赋值，然后在 FREERTOS 里调用  后续可根
     uint8_t robot_id;
     uint8_t Launching_Frequency;        // 弹丸射速频率（单位：Hz）
     uint16_t Launching_SPEED_Limit;     // 发射机构射击初速度上限
-    uint16_t Barrel_Heat;               // 发射机构的枪口热量
+    uint16_t Barrel_Heat_17mm;          // 17mm发射机构的枪口热量
+    uint16_t Barrel_Heat_42mm;          // 42mm发射机构的枪口热量
     uint16_t CooLing_Value;             // 枪口热量每秒冷却值
     uint16_t Heat_Limit;                // 枪口热量上限
     uint16_t projectile_allowance_17mm; // 17mm弹丸允许发弹量
+    uint16_t projectile_allowance_42mm; // 42mm弹丸允许发弹量
     uint16_t Buffer_Energy;             // 缓冲能量（单位：J）
     uint16_t Chassis_Power_Limit;       // 机器人底盘功率上限
-    uint16_t Outpost_HP;                //前哨战血量
-    uint16_t Baseeee_HP;                //基地血量
+    uint16_t Outpost_HP;                // 前哨战血量
+    uint16_t Baseeee_HP;                // 基地血量
     float rest_time;
+    
 
 } REFEREE_DATA_t;
+
+
 
 /********************
 ****game_type比赛类型1：RoboMaster 机甲大师超级对抗赛2：RoboMaster 机甲大师高校单项赛
@@ -45,28 +50,20 @@ ext_game_status_t;
 ***/
 typedef PACKED_STRUCT() // 0x0002  比赛结果数据1
 {
-    uint8_t winner; /******/
+    uint8_t winner;
 }
 ext_game_result_t;
 
 typedef PACKED_STRUCT() // 0x0003  机器人血量数据
 {
-    uint16_t red_1_robot_HP;
-    uint16_t red_2_robot_HP;
-    uint16_t red_3_robot_HP;
-    uint16_t red_4_robot_HP;
-    uint16_t red_5_robot_HP;
-    uint16_t red_7_robot_HP; /*哨兵*/
-    uint16_t red_outpost_HP; /**前哨站**/
-    uint16_t red_base_HP;
-    uint16_t blue_1_robot_HP;
-    uint16_t blue_2_robot_HP;
-    uint16_t blue_3_robot_HP;
-    uint16_t blue_4_robot_HP;
-    uint16_t blue_5_robot_HP;
-    uint16_t blue_7_robot_HP;
-    uint16_t blue_outpost_HP;
-    uint16_t blue_base_HP;
+    uint16_t ally_1_robot_HP;  
+    uint16_t ally_2_robot_HP;  
+    uint16_t ally_3_robot_HP;  
+    uint16_t ally_4_robot_HP;  
+    uint16_t reserved;  
+    uint16_t ally_7_robot_HP;  
+    uint16_t ally_outpost_HP;  
+    uint16_t ally_base_HP; 
 }
 ext_game_robot_HP_t; /**血量**/
 
@@ -99,35 +96,7 @@ typedef PACKED_STRUCT() // 0x0101  场地事件数据
 }
 ext_event_data_t;
 
-/******************
-0  保留
-***1
-补弹机器人 ID：
-? 0：当前无机器人补弹
-? 1：红方英雄机器人补弹
-? 3/4/5：红方步兵机器人补弹
-? 101：蓝方英雄机器人补弹
-? 103/104/105：蓝方步兵机器人补弹
-***2
-出弹口开闭状态：
-? 0：关闭
-? 1：弹丸准备中
-? 2：弹丸释放
-***3
-补弹数量：
-? 50：50 颗弹丸
-? 100：100 颗弹丸
-? 150：150 颗弹丸
-? 200：200 颗弹丸
-***************************/
-typedef PACKED_STRUCT() // 0x0102  补给站动作标识数据
-{
-    uint8_t reserved;
-    uint8_t supply_robot_id;
-    uint8_t supply_projectile_step;
-    uint8_t supply_projectile_num;
-}
-ext_supply_projectile_action_t;
+
 
 /****
 己方最后一次受到判罚的等级：
@@ -163,7 +132,7 @@ typedef PACKED_STRUCT() // 0x0105  飞镖发射时间数据
     uint8_t dart_remaining_time;
     uint16_t dart_info;
 }
-ext_dart_remaining_time_t;
+ext_dart_info_t;
 
 /***************
 0 1 本机器人 ID
@@ -180,7 +149,7 @@ ext_dart_remaining_time_t;
 ? bit 2： shooter 口输出： 0 为无输出， 1 为 24V 输出
 ? bit 3-7： 保留
 ***************/
-typedef PACKED_STRUCT() // 0x201  机器人性能体系数据
+typedef PACKED_STRUCT() // 0x0201  机器人性能体系数据
 {
 
     uint8_t robot_id;                           // 本机器人 ID
@@ -196,15 +165,14 @@ typedef PACKED_STRUCT() // 0x201  机器人性能体系数据
 }
 ext_robot_status_t;
 
-typedef PACKED_STRUCT() // 0x202  实时功率热量数据
+typedef PACKED_STRUCT() // 0x0202  实时功率热量数据
 {
-    uint16_t chassis_voltage;            // 电源管理模块 chassis 口输出电压（单位：mV）1.7删除
-    uint16_t chassis_current;            // 电源管理模块 chassis 口输出电流（单位：mA）1.7删除
-    float chassis_power;                 // 底盘功率（单位：W）1.7删除
-    uint16_t buffer_energy;              // 缓冲能量（单位：J）
-    uint16_t shooter_17mm_1_barrel_heat; // 第 1 个 17mm 发射机构的枪口热量(0)
-    uint16_t shooter_17mm_2_barrel_heat; // 第 2 个 17mm 发射机构的枪口热量(1)
-    uint16_t shooter_42mm_barrel_heat;   // 42mm 发射机构的枪口热量
+  uint16_t reserved1; 
+  uint16_t reserved2; 
+  float reserved3; 
+  uint16_t buffer_energy;                 //缓冲能量（单位：j）
+  uint16_t shooter_17mm_1_barrel_heat;    //17mm发射机构的射击热量
+  uint16_t shooter_42mm_barrel_heat;      //42mm发射机构的射击热量
 }
 ext_power_heat_data_t;
 
@@ -229,19 +197,15 @@ ext_robot_pos_t;
 *****************/
 typedef PACKED_STRUCT() // 0x0204  机器人增益数据
 {
-    uint8_t recovery_buff; // 机器人回血增益（百分比，值为 10 意为每秒回复 10%最大血量）/******/
-    uint8_t cooling_buff;  // 机器人枪口冷却倍率（直接值，值为 5 意味着 5 倍冷却）/******/
-    uint8_t defence_buff;  // 机器人防御增益（百分比，值为 50 意为 50%防御增益）/******/
-    uint16_t attack_buff;  // 机器人攻击增益（百分比，值为 50 意为 50%攻击增益）/*****/
+  uint8_t recovery_buff;  
+  uint16_t cooling_buff;  
+  uint8_t defence_buff;  
+  uint8_t vulnerability_buff; 
+  uint16_t attack_buff; 
+  uint8_t remaining_energy;
 }
 ext_buff_t;
 
-typedef PACKED_STRUCT() // 0x0205  空中支援时间数据
-{
-    uint8_t airforce_status;
-    uint8_t time_remain;
-}
-ext_air_support_data_t;
 
 typedef PACKED_STRUCT() // 0x0206  伤害状态数据
 {
@@ -266,9 +230,10 @@ ext_shoot_data_t;
 ******/
 typedef PACKED_STRUCT() // 0x0208  允许发弹量
 {
-    uint16_t projectile_allowance_17mm; /*****/
-    uint16_t projectile_allowance_42mm; /****/
-    uint16_t remaining_gold_coin;       /****/
+    uint16_t projectile_allowance_17mm; 
+    uint16_t projectile_allowance_42mm;  
+    uint16_t remaining_gold_coin; 
+    uint16_t projectile_allowance_fortress; 
 }
 ext_projectile_allowance_t;
 
@@ -299,6 +264,7 @@ bit 位值为 1/0 的含义：是否已检测到该增益点 RFID
 typedef PACKED_STRUCT() // 0x0209  机器人 RFID 状态
 {
     uint32_t rfid_status;
+    uint8_t  rfid_status_2; 
 }
 ext_rfid_status_t;
 
@@ -325,27 +291,22 @@ ext_dart_client_cmd_t;
 *************/
 typedef PACKED_STRUCT() // 0x020B  地面机器人位置数据
 {
-    float hero_x;
-    float hero_y;
-    float engineer_x;
-    float engineer_y;
-    float standard_3_x;
-    float standard_3_y;
-    float standard_4_x;
-    float standard_4_y;
-    float standard_5_x;
-    float standard_5_y;
+  float hero_x;  
+  float hero_y;  
+  float engineer_x;  
+  float engineer_y;  
+  float standard_3_x;  
+  float standard_3_y;  
+  float standard_4_x;  
+  float standard_4_y;  
+  float reserved1;  
+  float reserved2;
 }
 ext_ground_robot_position_t; /*****/
 
 typedef PACKED_STRUCT() // 0x020C  雷达标记进度数据
 {
-    uint8_t mark_hero_progress;
-    uint8_t mark_engineer_progress;
-    uint8_t mark_standard_3_progress;
-    uint8_t mark_standard_4_progress;
-    uint8_t mark_standard_5_progress;
-    uint8_t mark_sentry_progress;
+    uint16_t mark_progress; 
 }
 ext_radar_mark_data_t;
 
@@ -359,6 +320,7 @@ bit 19-31：保留**/
 typedef PACKED_STRUCT() // 0x020D 哨兵决策指令
 {
     uint32_t sentry_info;
+    uint16_t sentry_info_2;
 }
 ext_sentry_info_t;
 
@@ -414,6 +376,13 @@ ext_sentry_cmd_t;
 typedef PACKED_STRUCT() // 0x0121 雷达自主决策指令
 {
     uint8_t radar_cmd;
+    uint8_t password_cmd; 
+    uint8_t password_1; 
+    uint8_t password_2; 
+    uint8_t password_3; 
+    uint8_t password_4; 
+    uint8_t password_5; 
+    uint8_t password_6;
 }
 ext_radar_cmd_t;
 
@@ -432,15 +401,24 @@ typedef PACKED_STRUCT() // 0x0303  命令码
     float target_position_y; // 目标位置 y 轴坐标，单位 m 当发送目标机器人 ID 时，该值为 0
     uint8_t cmd_keyboard;    // 云台手按下的键盘按键通用键值 无按键按下则为 0
     uint8_t target_robot_id; // 对方机器人 ID 当发送坐标数据时，该值为 0
-    uint8_t cmd_source;      // 信息来源 ID
+    uint16_t cmd_source;      // 信息来源 ID
 }
 ext_map_command_t;
 
 typedef PACKED_STRUCT() // 0x0305  选手端小地图接收雷达数据
 {
-    uint16_t target_robot_id;
-    float target_position_x;
-    float target_position_y;
+    uint16_t hero_position_x; 
+    uint16_t hero_position_y; 
+    uint16_t engineer_position_x; 
+    uint16_t engineer_position_y; 
+    uint16_t infantry_3_position_x; 
+    uint16_t infantry_3_position_y; 
+    uint16_t infantry_4_position_x; 
+    uint16_t infantry_4_position_y; 
+    uint16_t infantry_5_position_x; 
+    uint16_t infantry_5_position_y; 
+    uint16_t sentry_position_x; 
+    uint16_t sentry_position_y;
 }
 ext_map_robot_data_t;
 
@@ -454,18 +432,18 @@ typedef PACKED_STRUCT() // 0x0307  选手端小地图接收哨兵数据
     int8_t delta_y[49];
     uint16_t sender_id;
 }
-ext_map_sentry_data_t;
+ext_map_data_t;
 
 /***/
 typedef PACKED_STRUCT() // 0x0308  己方机器人可通过常规链路向己方任意选手端发送自定义的消息，该消息会在己方选手端特定位置显示。
 {
     uint16_t sender_id;     // 发送者ID
     uint16_t receiver_id;   // 接受者ID
-    uint16_t user_data[30]; // 字符，符合UTF-16,支持中文，注意数据大小端
+    uint8_t user_data[30]; // 字符，符合UTF-16,支持中文，注意数据大小端
 }
 ext_custom_info_t;
 
-typedef PACKED_STRUCT() // 0x0302  自定义控制器与机器人交互数据
+typedef PACKED_STRUCT() // 0x0302  自定义控制器向机器人发送数据
 {
     uint8_t data[25];
 }
@@ -483,7 +461,7 @@ typedef PACKED_STRUCT() // 0x0304  键鼠遥控数据
 }
 ext_remote_control_t;
 
-typedef PACKED_STRUCT() // 0x0306  自定义控制器与选手端交互数据
+typedef PACKED_STRUCT() // 0x0306  自定义控制器交互数据
 {
     uint16_t key_value;
     uint16_t x_position : 12;
@@ -493,6 +471,19 @@ typedef PACKED_STRUCT() // 0x0306  自定义控制器与选手端交互数据
     uint16_t reserved;
 }
 ext_custom_client_data_t;
+
+typedef PACKED_STRUCT() // 0x0309  图传链路向自定义控制器发送数据
+{
+    uint8_t data[25];
+}
+ext_robot_custom_data_t;
+
+typedef PACKED_STRUCT() // 0x0310  图传链路向自定义控制器发送数据
+{
+    uint8_t data[25];
+}
+ext_robot_custom_data_2_t;
+
 
 ///************************** 机器人间交互数据 ********************/
 ///* 交互数据接收信息： 0x0301 */

@@ -1,3 +1,9 @@
+/*
+ * @Date: 2025-08-31 21:36:57
+ * @LastEditors: hao && (hao@qlu.edu.cn)
+ * @LastEditTime: 2025-10-30 20:13:04
+ * @FilePath: \Season-26-Code\User\BSP\Power_switch.c
+ */
 /**
  * @file Power_switch.c
  * @author Siri (lixirui2017@outlook.com)
@@ -17,7 +23,7 @@
  * @param power which power you want to set
  * @param status the status you want the power be
  */
-void Power_set(powertyp power, GPIO_PinState status)
+void Power_Set(powertyp power, GPIO_PinState status)
 {
     if (power == power1)
         HAL_GPIO_WritePin(Power_OUT1_GPIO_Port, Power_OUT1_Pin, status);
@@ -30,7 +36,7 @@ void Power_set(powertyp power, GPIO_PinState status)
  * 
  * @param power the power you want to turn_off
  */
-void Power_Turn_off(powertyp power)
+void Power_TurnOff(powertyp power)
 {
     if (power == power1)
         HAL_GPIO_WritePin(Power_OUT1_GPIO_Port, Power_OUT1_Pin, RESET);
@@ -43,7 +49,7 @@ void Power_Turn_off(powertyp power)
  * 
  * @param power the power you want to turn-on
  */
-void Power_Turn_on(powertyp power)
+void Power_TurnOn(powertyp power)
 {
     if (power == power1)
         HAL_GPIO_WritePin(Power_OUT1_GPIO_Port, Power_OUT1_Pin, SET);

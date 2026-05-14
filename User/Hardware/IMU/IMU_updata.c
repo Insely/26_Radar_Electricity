@@ -1,5 +1,5 @@
 /**
- * @file IMU_updata.c
+ * @file IMU_Updata.c
  * @author sethome
  * @brief IMU updata info
  * @version 0.1
@@ -47,14 +47,15 @@ struct IMU_t IMU_data;			   // IMU ˝æ›Ω·ππÃÂ
 struct IMU_t IMU_data_history[10]; // IMU¿˙ ∑ ˝æ›Ω·ππÃÂ
 
 hipnuc_raw_t IMU_HI_GIMBAL_data;
+dm_imu_t dm_imu_data;
 
 // ƒ⁄≤øµ˜”√
-void IMU_heat_set(uint16_t ccr); // º”»»µÁ◊ËPWM’ºø’±»
+void IMU_HeatSet(uint16_t ccr); // º”»»µÁ◊ËPWM’ºø’±»
 void shiftArray(float arr[], int size);
-static void imu_temp_control(fp32 temp);
+static void IMU_TempControl(fp32 temp);
 
 // Àƒ‘™ ˝◊™Œ™≈∑¿≠Ω« ∑«µ˜”√lib∞Ê±æ£¨Œ…æ
-void Get_angle(fp32 q[4], fp32 *yaw, fp32 *pitch, fp32 *roll)
+void Get_Angle(fp32 q[4], fp32 *yaw, fp32 *pitch, fp32 *roll)
 {
 	*yaw = atan2f(2.0f * (q[0] * q[3] + q[1] * q[2]), 2.0f * (q[0] * q[0] + q[1] * q[1]) - 1.0f);
 	*pitch = asinf(-2.0f * (q[1] * q[3] - q[0] * q[2]));
@@ -62,7 +63,7 @@ void Get_angle(fp32 q[4], fp32 *yaw, fp32 *pitch, fp32 *roll)
 }
 
 // ≥ı ºªØ
-void IMU_init()
+void IMU_Init()
 {
 	BMI088_init(); // Õ”¬›“«
 
@@ -78,7 +79,7 @@ void IMU_init()
 
 	AHRS_init(IMU_data.AHRS.q, IMU_data.accel, IMU_data.mag); // AHRS¬À≤®≤Œ ˝
 
-	pid_set(&IMU_tempure_pid, 2000, 0.2, 0, 4500, 4400);
+	PID_Set(&IMU_tempure_pid, 2000, 0.2, 0, 4500, 4400);
 
 	HAL_TIM_Base_Start(&htim3); // º”»»µÁ◊ËPWM
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
@@ -100,7 +101,7 @@ void IMU_init()
 	// }
 }
 
-void process_IMU_data()
+void Process_IMUData()
 {
 	// º∆À„◊‹»¶ ˝
 	if (IMU_data.AHRS.last_yaw > 3.0f && IMU_data.AHRS.yaw < -3.0f)
@@ -111,7 +112,7 @@ void process_IMU_data()
 		IMU_data.AHRS.yaw_rad_cnt += (IMU_data.AHRS.yaw - IMU_data.AHRS.last_yaw);
 }
 // IMU∏¸–¬∫Ø ˝
-void IMU_updata() // 1000HZ
+void IMU_Updata() // 1000HZ
 {
 	//  ∂¡»°Õ”¬›“«∫Õµÿ¥≈º∆–≈œ¢
 	BMI088_read(IMU_data.gyro, IMU_data.accel, &IMU_data.temp);
@@ -125,7 +126,7 @@ void IMU_updata() // 1000HZ
 	// IMU_data.gyro[2] -= 0.000124635975;
 
 	// º”»»∆˜PIDº∆À„
-	imu_temp_control(IMU_data.temp);
+	IMU_TempControl(IMU_data.temp);
 
 	// º”ÀŸ∂»º∆µÕÕ®¬À≤®
 	// accel low-pass filter
@@ -151,10 +152,10 @@ void IMU_updata() // 1000HZ
 										 IMU_data.gyro,
 										 accel_fliter_3,
 										 IMU_data.mag);
-	last_time = Get_sys_time_ms();
+	last_time = Get_SysTime_ms();
 	get_angle(IMU_data.AHRS.q, &IMU_data.AHRS.yaw, &IMU_data.AHRS.roll, &IMU_data.AHRS.pitch);
 
-	// process_IMU_data();
+	// Process_IMUData();
 	if (IMU_data.AHRS.last_yaw > 3.0f && IMU_data.AHRS.yaw < -3.0f)
 		IMU_data.AHRS.yaw_rad_cnt += ((PI - IMU_data.AHRS.last_yaw) + (IMU_data.AHRS.yaw + PI));
 	else if (IMU_data.AHRS.last_yaw < -3.0f && IMU_data.AHRS.yaw > 3.0f)
@@ -190,7 +191,7 @@ void MagZero() // «Â¡„µÿ¥≈º∆
 	IMU_data.mag[2] = 0;
 }
 // …Ë∂®º”»»µƒPWM’ºø’±»
-void IMU_heat_set(uint16_t ccr)
+void IMU_HeatSet(uint16_t ccr)
 {
 	if (ccr < 0)
 	{
@@ -205,24 +206,24 @@ void IMU_heat_set(uint16_t ccr)
  * @param[in]      temp:bmi088µƒŒ¬∂»
  * @retval         none
  */
-static void imu_temp_control(fp32 temp)
+static void IMU_TempControl(fp32 temp)
 {
 	uint16_t tempPWM;
 	static uint8_t temp_constant_time = 0;
 	if (first_temperate)
 	{
-		pid_cal(&IMU_tempure_pid, temp, 45);
+		PID_Cal(&IMU_tempure_pid, temp, 45);
 
 		if (IMU_tempure_pid.total_out < 0.0f)
 		{
 			IMU_tempure_pid.total_out = 0.0f;
 		}
 		tempPWM = (uint16_t)IMU_tempure_pid.total_out;
-		IMU_heat_set(tempPWM);
+		IMU_HeatSet(tempPWM);
 	}
 }
 
-void imu_cail_program(void) // Õ”¬›“«–£◊º≥Ã–Ú£¨∑≈‘⁄œ–÷√»ŒŒÒ¿Ô√Ê£¨–Ë“™µƒ ±∫Ú–£◊º“ª¥ŒÀ„≥ˆ∆Ωæ˘ ˝÷µº”…œº¥ø…
+void IMU_CailProgram(void) // Õ”¬›“«–£◊º≥Ã–Ú£¨∑≈‘⁄œ–÷√»ŒŒÒ¿Ô√Ê£¨–Ë“™µƒ ±∫Ú–£◊º“ª¥ŒÀ„≥ˆ∆Ωæ˘ ˝÷µº”…œº¥ø…
 {
 	IMU_data.calibration[0] = 0;
 	IMU_data.calibration[1] = 0;
@@ -247,7 +248,7 @@ void imu_cail_program(void) // Õ”¬›“«–£◊º≥Ã–Ú£¨∑≈‘⁄œ–÷√»ŒŒÒ¿Ô√Ê£¨–Ë“™µƒ ±∫Ú–£◊º“
 	}
 }
 
-void IMU_offest()
+void IMU_Offest()
 {
 	if (fabs(IMU_data.gyro[0]) > 1.0f && fabs(IMU_data.gyro[1]) > 1.0f && fabs(IMU_data.gyro[2]) > 1.0f)
 	{

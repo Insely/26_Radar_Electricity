@@ -11,9 +11,9 @@ typedef struct
 
 
 
-#define MUSIC_SET_FREQUENCY(fre) Buzzer_set_frequency(fre)
-#define MUSIC_ON() Buzzer_on()
-#define MUSIC_OFF() Buzzer_off()
+#define MUSIC_SET_FREQUENCY(fre) Buzzer_SetFrequency(fre)
+#define MUSIC_ON() Buzzer_On()
+#define MUSIC_OFF() Buzzer_Off()
 #define MUSIC_DELAY(time) osDelay(time)
 
 // ===== C大调低音区（C3-B3）=====
@@ -44,10 +44,10 @@ typedef struct
 #define HIGH_SI 987.77f  // B5
 
 // ===== C大调结束标志=====
-#define MUSIC_FINISH 0.00f //结束
+#define MUSIC_FINISH 0.00f // 结束
 
-void Music_init();
-void Music_play(Note *note);
+void Music_Init();
+void Music_Play(Note *note);
 
 extern Note melody[];
 

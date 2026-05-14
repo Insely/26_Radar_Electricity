@@ -1,3 +1,9 @@
+/*
+ * @Date: 2025-08-31 21:36:57
+ * @LastEditors: hao && (hao@qlu.edu.cn)
+ * @LastEditTime: 2025-10-30 20:04:44
+ * @FilePath: \Season-26-Code\User\Algorithm\VMC.c
+ */
 #include "vmc.h"
 #include "math.h"
 
@@ -25,7 +31,7 @@ void VMC_Init(VMC_s *VMC, float L1, float L2, float L3, float L4, float L5)
  * @param Phi1_ddot
  * @param Phi4_ddot
  */
-void VMC_updata(VMC_s *VMC, float Phi1, float Phi4, float Phi1_dot, float Phi4_dot, float Phi1_ddot, float Phi4_ddot)
+void VMC_Updata(VMC_s *VMC, float Phi1, float Phi4, float Phi1_dot, float Phi4_dot, float Phi1_ddot, float Phi4_ddot)
 {
     VMC->Phi1 = Phi1;
     VMC->Phi4 = Phi4;
@@ -40,7 +46,7 @@ void VMC_updata(VMC_s *VMC, float Phi1, float Phi4, float Phi1_dot, float Phi4_d
  *
  * @param VMC VMC指针
  */
-void VMC_cal(VMC_s *VMC)
+void VMC_Cal(VMC_s *VMC)
 {
     float sin_Phi3_Phi2, sin_Phi1_Phi2, sin_Phi3_Phi4; // 储存临时数据
 

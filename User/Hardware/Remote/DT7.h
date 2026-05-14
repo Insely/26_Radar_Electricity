@@ -102,6 +102,6 @@ typedef struct
 
 extern DT7_data_s DT7_data;
 
-void DT7_decode_data(uint8_t *data);
+void DT7_DecodeData(uint8_t *data);
 
 #endif // !__DT&_H__

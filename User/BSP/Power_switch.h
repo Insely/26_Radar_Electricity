@@ -9,9 +9,9 @@ typedef enum
     power2,
 } powertyp;
 
-void Power_set(powertyp power, GPIO_PinState status);
-void Power_Turn_off(powertyp power);
-void Power_Turn_on(powertyp power);
+void Power_Set(powertyp power, GPIO_PinState status);
+void Power_TurnOff(powertyp power);
+void Power_TurnOn(powertyp power);
 
 
 #endif // !__POWER_SWITCH_H

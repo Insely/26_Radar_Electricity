@@ -35,7 +35,7 @@ typedef PACKED_STRUCT()
         int online;
 } VT13_data_t;
 
-extern void VT13_data_solve(volatile const uint8_t *VT13_buf, VT13_data_t *rc_ctrl);
+extern void VT13_DataSolve(volatile const uint8_t *VT13_buf, VT13_data_t *rc_ctrl);
 extern VT13_data_t VT13_data;
 
 #endif // ! __RC_N2__

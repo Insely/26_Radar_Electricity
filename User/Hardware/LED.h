@@ -15,6 +15,6 @@ typedef enum {
 } Color;
 
 
-void LEDshowcolor(uint32_t color);
+void LED_ShowColor(uint32_t color);
 
 #endif // !__LED_H__

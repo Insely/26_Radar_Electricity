@@ -2,8 +2,6 @@
 #ifndef KALMAN_FILTER_IMU_KALMAN_FILTER_C_H
 #define KALMAN_FILTER_IMU_KALMAN_FILTER_C_H
 
-#endif //KALMAN_FILTER_IMU_KALMAN_FILTER_C_H
-
 #define DEG_TO_RAD 0.017453292519943295769236907684886
 #define RAD_TO_DEG 57.295779513082320876798154814105
 #include <math.h>
@@ -58,7 +56,7 @@ float AutoAim_pitch_Algorithm(KF_t *str);//pitch
 float AutoAim_Algorithm(KF_t *str,float input);//yaw
 
 
-
+#endif //KALMAN_FILTER_IMU_KALMAN_FILTER_C_H
 
 #ifdef __cplusplus
 }

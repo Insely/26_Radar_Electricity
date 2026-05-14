@@ -43,7 +43,7 @@
                 "USE_HAL_DRIVER",
                 "STM32H723xx"
             ],
-            "compilerPath": "/usr/bin/clang",
+            "compilerPath": "D:/arm-none-eabi-gcc/bin/arm-none-eabi-gcc.exe",
             "cStandard": "c17",
             "cppStandard": "gnu++14",
             "intelliSenseMode": "gcc-arm"

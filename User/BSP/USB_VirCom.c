@@ -1,3 +1,9 @@
+/*
+ * @Date: 2025-08-31 21:36:57
+ * @LastEditors: hao && (hao@qlu.edu.cn)
+ * @LastEditTime: 2025-10-30 20:22:21
+ * @FilePath: \Season-26-Code\User\BSP\USB_VirCom.c
+ */
 /**
  * @file USB_VirCom.c
  * @author sethome
@@ -19,7 +25,7 @@
 
 
 
-void VirCom_send(uint8_t data[], uint16_t len)
+void Vircom_Send(uint8_t data[], uint16_t len)
 {
   if (CDC_Transmit_HS(data, len) == 1) // 判断数据是否发送
   {
@@ -29,7 +35,7 @@ void VirCom_send(uint8_t data[], uint16_t len)
   }
 }
 
-void VirCom_rev(uint8_t data[], uint16_t len)
+void Vircom_Rev(uint8_t data[], uint16_t len)
 {
   // if(data[0]==0xA5){
   //   Global.Auto.input.Auto_control_online=100;
@@ -46,7 +52,7 @@ void VirCom_rev(uint8_t data[], uint16_t len)
 #endif
 PUTCHAR_PROTOTYPE
 {
-  VirCom_send((uint8_t *)&ch, 1);
+  Vircom_Send((uint8_t *)&ch, 1);
 
   return ch;
 }
